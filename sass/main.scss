@@ -1,0 +1,128 @@
+$white: #fff;
+$l_grey: #ededed;
+$lm_grey: #dcdcdc;
+$m_grey: #7a7a7a;
+$d_grey: #282828;
+$mld_red: #800000;
+/*
+  1. Use a more-intuitive box-sizing model.
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+/*
+  2. Remove default margin
+*/
+* {
+  margin: 0;
+}
+/*
+  3. Allow percentage-based heights in the application
+*/
+html,
+body {
+  height: 100%;
+}
+/*
+  Typographic tweaks!
+  4. Add accessible line-height
+  5. Improve text rendering
+*/
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+/*
+  6. Improve media defaults
+*/
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+/*
+  7. Remove built-in form typography styles
+*/
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+/*
+  8. Avoid text overflows
+*/
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a {
+  overflow-wrap: break-word;
+  font-family: helvetica-mld;
+  letter-spacing: -0.8px;
+}
+
+a {
+  color: $d_grey;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a.button {
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  border: 3px solid;
+}
+
+.page-wrapper {
+  .container {
+    padding: 2rem;
+  }
+
+  .grey-bg {
+    background-color: $l_grey;
+  }
+
+  .mld-red-text {
+    color: $mld_red;
+  }
+  .centered-text {
+    text-align: center;
+  }
+}
+
+.email-confirmed {
+  .container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    h1 {
+      color: $mld_red;
+      font-weight: 500;
+      font-size: 6rem;
+    }
+
+    p {
+      font-weight: 500;
+      font-size: 3rem;
+      color: $m_grey;
+    }
+
+    a {
+      margin-top: 3rem;
+      font-size: 2rem;
+      // color: $mld_red
+    }
+  }
+}

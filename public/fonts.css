@@ -1,0 +1,16 @@
+@font-face {
+  font-family: helvetica-mld;
+  src: url(./fonts/HelveticaNeueLTStd-Md.otf);
+  font-weight: 600;
+}
+@font-face {
+  font-family: helvetica-mld;
+  src: url(./fonts/HelveticaNeueLTStd-Th.otf);
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: helvetica-mld;
+  src: url(./fonts/HelveticaNeueLTStd-ThEx.otf);
+  font-weight: 400;
+}
