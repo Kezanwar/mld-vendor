@@ -1,4 +1,4 @@
-module.exports.store_roles = {
+module.exports.STORE_ROLES = {
   super_admin: {
     id: 'super_admin',
     label: 'Super Admin',
@@ -11,4 +11,11 @@ module.exports.store_roles = {
     id: 'user',
     label: 'User',
   },
+}
+
+module.exports.STORE_STATUS = {
+  NONE: 'NONE',
+  PENDING_APPLICATION: 'PENDING_APPLICATION',
+  LIVE: 'LIVE',
+  DISABLED: 'DISABLED',
 }

@@ -13,14 +13,13 @@ const User = require('../../models/User')
 
 // middlewares
 const auth = require('../../middleware/auth')
-const { SendError, capitalizeFirstLetter } = require('./utilities/utilities')
+const { SendError, capitalizeFirstLetter } = require('../utilities/utilities')
 
 const transporter = require('../../emails/nodeMailer')
 const { noreply } = require('../../emails/emailAddresses')
 const {
   HeaderAndActionButtonEmailTemplate,
 } = require('../../emails/templates/headerAndActionButton/HeaderAndActionButtonEmailTemplate')
-const Store = require('../../models/Store')
 
 // route GET api/auth
 // @desc GET A LOGGED IN USER WITH JWT
@@ -29,7 +28,6 @@ router.get('/', auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password')
     if (!user) throw new Error('User doesnt exist')
-    console.log(store)
     res.json({ user })
   } catch (error) {
     SendError(res, error)
@@ -224,8 +222,8 @@ router.post(
 
 // using async await here means that in our try / catch statement we just await each method which returns a promise, rather then calling .then() and then .then() inside the first .then and hen another inside the next .then etc. keeps the code more clean looking.
 
-// route GET api/auth
-// @desc GET A LOGGED IN USER WITH JWT
+// route GET api/auth/confirm-mail/:token
+// @desc CONFIRM EMAIL ADDRESS
 // @access private
 router.get('/confirm-email/:token', async (req, res) => {
   try {
@@ -245,8 +243,48 @@ router.get('/confirm-email/:token', async (req, res) => {
   }
 })
 
+// route POST api/auth/resend-confirm-email
+// @desc CONFIRM EMAIL ADDRESS
+// @access private
+router.post('/resend-confirm-email', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password')
+    if (!user) throw new Error('User doesnt exist')
+    const confirmEmailPayload = {
+      email: user.email,
+    }
+
+    jwt.sign(
+      confirmEmailPayload,
+      config.get('jwtSecret'),
+      { expiresIn: 360000 },
+      async (err, token) => {
+        if (err) throw new Error(err)
+
+        const emailHtml = HeaderAndActionButtonEmailTemplate(
+          user.first_name,
+          'Please click the link below to confirm your email',
+          `http://localhost:5006/api/auth/confirm-email/${token}`,
+          'Confirm your email'
+        )
+
+        let info = await transporter.sendMail({
+          from: `"My Local Deli" <${noreply}>`, // sender address
+          to: user.email, // list of receivers
+          subject: 'Confirm your email address!', // Subject line
+          // text: 'Hello world?', // plain text body
+          html: emailHtml, // html body
+        })
+      }
+    )
+    res.status(200).send({ message: 'success' })
+  } catch (error) {
+    SendError(res, error)
+  }
+})
+
 // route GET api/auth
-// @desc GET A LOGGED IN USER WITH JWT
+// @desc RESET PASSWORD
 // @access private
 router.post('/forgot-password', async (req, res) => {
   try {

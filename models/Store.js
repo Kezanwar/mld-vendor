@@ -140,8 +140,12 @@ const StoreSchema = mongoose.Schema(
         },
       },
     ],
-    application_status: {
-      type: Boolean,
+    registration_step: {
+      type: String,
+      required: true,
+    },
+    store_status: {
+      type: String,
       required: true,
     },
   },

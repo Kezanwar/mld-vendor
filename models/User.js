@@ -91,10 +91,6 @@ const UserSchema = mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: 'store',
       },
-      store_registration_step: {
-        type: Number,
-        default: 0,
-      },
       role: {
         type: String,
         // required: function () {
