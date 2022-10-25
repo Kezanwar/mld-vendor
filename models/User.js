@@ -87,7 +87,7 @@ const UserSchema = mongoose.Schema(
       },
     ],
     store: {
-      id: {
+      store_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'store',
       },

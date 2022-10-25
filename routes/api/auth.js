@@ -13,7 +13,11 @@ const User = require('../../models/User')
 
 // middlewares
 const auth = require('../../middleware/auth')
-const { SendError, capitalizeFirstLetter } = require('../utilities/utilities')
+const {
+  SendError,
+  capitalizeFirstLetter,
+  mapValidationErrorArray,
+} = require('../utilities/utilities')
 
 const transporter = require('../../emails/nodeMailer')
 const { noreply } = require('../../emails/emailAddresses')
@@ -42,16 +46,14 @@ router.post(
   '/login',
   //   middleware validating the req.body using express-validator
   [
-    check('email', 'Please include a valid e-mail').isEmail(),
-    check('password', 'Password is required').exists(),
+    check('email', 'Please include a valid e-mail ').isEmail(),
+    check('password', 'Password is required ').exists(),
   ],
   async (req, res) => {
     try {
       // generating errors from validator and handling them with res
       const errors = validationResult(req)
-      if (!errors.isEmpty()) {
-        throw new Error(errors)
-      }
+      if (!errors.isEmpty()) throw new Error(mapValidationErrorArray(errors))
       // if validator check passes then
 
       // destructuring from req.body
@@ -116,12 +118,12 @@ router.post(
   '/register',
   //   middleware validating the req.body using express-validator
   [
-    check('first_name', 'Name is required').not().isEmpty(),
-    check('last_name', 'Name is required').not().isEmpty(),
-    check('email', 'Please include a valid e-mail').isEmail(),
+    check('first_name', ' Name is required').not().isEmpty(),
+    check('last_name', ' Name is required').not().isEmpty(),
+    check('email', ' Please include a valid e-mail').isEmail(),
     check(
       'password',
-      'Please enter a password with 6 or more characters'
+      ' Please enter a password with 6 or more characters'
     ).isLength({ min: 6 }),
   ],
   async (req, res) => {
@@ -129,7 +131,7 @@ router.post(
 
     try {
       const errors = validationResult(req)
-      if (!errors.isEmpty()) throw new Error(errors)
+      if (!errors.isEmpty()) throw new Error(mapValidationErrorArray(errors))
 
       // if validator check passes then
 
@@ -219,8 +221,6 @@ router.post(
     }
   }
 )
-
-// using async await here means that in our try / catch statement we just await each method which returns a promise, rather then calling .then() and then .then() inside the first .then and hen another inside the next .then etc. keeps the code more clean looking.
 
 // route GET api/auth/confirm-mail/:token
 // @desc CONFIRM EMAIL ADDRESS
