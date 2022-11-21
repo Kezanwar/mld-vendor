@@ -54,6 +54,7 @@ const UserSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     dob: Date,
     interests: [
@@ -102,6 +103,7 @@ const UserSchema = mongoose.Schema(
     payment_details: {
       type: Object,
       // need to add to this
+      select: false,
     },
     notifications: [
       {

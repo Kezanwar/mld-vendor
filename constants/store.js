@@ -1,16 +1,7 @@
 module.exports.STORE_ROLES = {
-  super_admin: {
-    id: 'super_admin',
-    label: 'Super Admin',
-  },
-  admin: {
-    id: 'admin',
-    label: 'Admin',
-  },
-  user: {
-    id: 'user',
-    label: 'User',
-  },
+  super_admin: 'super_admin',
+  admin: 'admin',
+  user: 'user',
 }
 
 module.exports.STORE_STATUS = {

@@ -17,6 +17,9 @@ const {
   SendError,
   capitalizeFirstLetter,
   mapValidationErrorArray,
+  removeDocumentValues,
+  getUserStoreAndRole,
+  getUser,
 } = require('../utilities/utilities')
 
 const transporter = require('../../emails/nodeMailer')
@@ -30,7 +33,7 @@ const {
 // @access private
 router.get('/', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password')
+    const user = await getUser(req.user.id)
     if (!user) throw new Error('User doesnt exist')
     res.json({ user })
   } catch (error) {
@@ -59,7 +62,7 @@ router.post(
       // destructuring from req.body
       const { email, password } = req.body
       // checking if user doesnt exist, if they dont then send err
-      let user = await User.findOne({ email: email })
+      let user = await User.findOne({ email: email }).select('+password')
 
       if (!user) {
         throw new Error('Invalid credentials')
@@ -97,9 +100,10 @@ router.post(
           //   httpOnly: true,
           //   expires: 360000,
           // })
+          const userResponse = removeDocumentValues(['_id', 'password'], user)
           res.json({
             accessToken: token,
-            user: { ...user._doc, password: null },
+            user: userResponse,
           })
         }
       )
@@ -209,9 +213,10 @@ router.post(
         async (err, token) => {
           if (err) throw new Error(err)
 
+          const userResponse = removeDocumentValues(['_id', 'password'], user)
           res.json({
             accessToken: token,
-            user: { ...user._doc, password: null },
+            user: userResponse,
           })
         }
       )
@@ -248,7 +253,7 @@ router.get('/confirm-email/:token', async (req, res) => {
 // @access private
 router.post('/resend-confirm-email', auth, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password')
+    const user = await User.findById(req.user.id)
     if (!user) throw new Error('User doesnt exist')
     const confirmEmailPayload = {
       email: user.email,
