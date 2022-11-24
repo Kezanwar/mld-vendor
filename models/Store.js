@@ -63,6 +63,9 @@ const StoreSchema = mongoose.Schema(
         city: {
           type: String,
         },
+        country: {
+          type: String,
+        },
       },
     },
     store_address: {
@@ -79,6 +82,12 @@ const StoreSchema = mongoose.Schema(
       city: {
         type: String,
       },
+      country: {
+        type: String,
+      },
+    },
+    store_address_use_company: {
+      type: Boolean,
     },
     contact_details: {
       // select: false,
@@ -156,6 +165,40 @@ StoreSchema.methods.setupStep1New = async function (data) {
 }
 
 // UPDATE STEP 1
+StoreSchema.methods.updateStoreAddress = async function ({
+  store_address_use_company,
+  store_address,
+}) {
+  console.log(this)
+  if (store_address_use_company === true) {
+    this.store_address.address_line_1 =
+      this.company_info.company_address.address_line_1
+    this.store_address.address_line_2 =
+      this.company_info.company_address.address_line_2 || ''
+    this.store_address.postcode = this.company_info.company_address.postcode
+    this.store_address.city = this.company_info.company_address.city
+    this.store_address.country = this.company_info.company_address.country
+    this.store_address_use_company = store_address_use_company
+    await this.save()
+    return
+  }
+  if (store_address_use_company === false) {
+    if (
+      !store_address?.address_line_1 ||
+      !store_address?.postcode ||
+      !store_address?.city ||
+      !store_address?.country
+    ) {
+      throw new Error('Store address incomplete')
+    } else {
+      this.store_address = store_address
+      this.store_address_use_company = store_address_use_company
+      await this.save()
+    }
+  }
+}
+
+// UPDATE STEP 1
 StoreSchema.methods.setupStep1Update = async function (data) {
   if (!data) throw new Error('no data passed to setup method')
   const dataArr = Object.entries(data)
@@ -174,10 +217,12 @@ StoreSchema.methods.setupStep2 = async function ({
   contact_number,
   profile_image,
   cover_photo,
+  store_address,
 }) {
   this.store_name = store_name
   this.store_url = store_url
   this.bio = bio
+  this.store_address = store_address
   this.contact_details = {
     email,
     contact_number,
@@ -187,6 +232,9 @@ StoreSchema.methods.setupStep2 = async function ({
   }
   if (cover_photo) {
     this.cover_photo = cover_photo
+  }
+  if (this.registration_step === '1') {
+    this.registration_step = '2'
   }
   await this.save()
 }

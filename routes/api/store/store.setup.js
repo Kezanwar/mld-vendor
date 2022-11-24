@@ -199,6 +199,7 @@ router.post(
     check('bio', ' Bio is required').not().isEmpty(),
     check('email', ' Email is required').not().isEmpty(),
     check('contact_number', ' Contact number is required').not().isEmpty(),
+    check('store_address_use_company').isBoolean(),
   ],
   async (req, res) => {
     try {
@@ -214,7 +215,21 @@ router.post(
         throw new Error('Not authorized to edit this store')
       }
 
-      const { store_name, store_url, bio, email, contact_number } = req.body
+      const {
+        store_name,
+        store_url,
+        bio,
+        email,
+        contact_number,
+        store_address_use_company,
+        store_address,
+      } = req.body
+
+      await store.updateStoreAddress({
+        store_address_use_company: JSON.parse(store_address_use_company),
+        store_address: JSON.parse(store_address),
+      })
+
       // if no images update
       if (!req.files || (!req.files.profile_image && !req.files.cover_photo)) {
         await store.setupStep2({
