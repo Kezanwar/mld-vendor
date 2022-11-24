@@ -11,7 +11,7 @@ const User = require('../../../models/User')
 
 // middlewares
 const auth = require('../../../middleware/auth')
-const { SendError } = require('../utilities/utilities')
+const { SendError } = require('../../utilities/utilities')
 const transporter = require('../../../emails/nodeMailer')
 const {
   HeaderAndActionButtonEmailTemplate,

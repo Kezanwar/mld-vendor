@@ -1,4 +1,4 @@
-const { facebook, instagram, linkedin } = require('../../../constant/icons')
+const { facebook, instagram, linkedin } = require('../../../constants/icons')
 
 module.exports.HeaderAndActionButtonEmailTemplate = (
   userName,
